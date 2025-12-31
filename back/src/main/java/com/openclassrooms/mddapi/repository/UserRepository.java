@@ -1,5 +1,14 @@
 package com.openclassrooms.mddapi.repository;
 
-public class UserRepository extends JpaRepository<UserModel, Integer> {
+import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.openclassrooms.mddapi.model.entity.User;
+
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
 }

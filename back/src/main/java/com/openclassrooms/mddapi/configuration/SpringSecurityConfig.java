@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import com.openclassrooms.mddapi.service.UserService;
 
 @Configuration
@@ -22,10 +21,10 @@ import com.openclassrooms.mddapi.service.UserService;
 public class SpringSecurityConfig {
 
     @Autowired
-    private JwtAuthFilter jwtAuthFilter;
+    private UserService userService;
 
     @Autowired
-    private UserService userService;
+    private JwtAuthFilter jwtAuthFilter;
 
     // Configure les filtres et les endpoints sécurisés
     @Bean
@@ -54,9 +53,9 @@ public class SpringSecurityConfig {
     // l'encodeur de mot de passe
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService); // Service pour récupérer l'utilisateur
-        authProvider.setPasswordEncoder(passwordEncoder()); // Encodeur de mot de passe
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(this.userService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
         return authProvider;
     }
 
