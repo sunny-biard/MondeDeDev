@@ -1,12 +1,12 @@
 package com.openclassrooms.mddapi.controller;
 
+import com.openclassrooms.mddapi.model.dto.UserDto;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.mapper.AuthMapper;
 import com.openclassrooms.mddapi.model.mapper.UserMapper;
 import com.openclassrooms.mddapi.model.request.LoginRequest;
 import com.openclassrooms.mddapi.model.request.RegisterRequest;
-import com.openclassrooms.mddapi.model.response.AuthSuccess;
-import com.openclassrooms.mddapi.model.response.UserResponse;
+import com.openclassrooms.mddapi.model.response.AuthResponse;
 import com.openclassrooms.mddapi.service.JwtService;
 import com.openclassrooms.mddapi.service.UserService;
 
@@ -37,7 +37,7 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public AuthSuccess login(@Valid @RequestBody LoginRequest req) {
+    public AuthResponse login(@Valid @RequestBody LoginRequest req) {
         // Authentification de l'utilisateur
         authManager
                 .authenticate(new UsernamePasswordAuthenticationToken(req.getIdentifier(), req.getPassword()));
@@ -51,7 +51,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public AuthSuccess register(@Valid @RequestBody RegisterRequest req) {
+    public AuthResponse register(@Valid @RequestBody RegisterRequest req) {
         // Vérifie si l'utilisateur existe déjà
         if (userService.getUserByEmail(req.getEmail()).isPresent()) {
             throw new RuntimeException("User already exists");
@@ -77,14 +77,13 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public UserResponse me() {
+    public UserDto me() {
         // Récupère l'email de l'utilisateur authentifié
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // Récupère l'utilisateur en base de données et le convertit en DTO
         return UserMapper.toDto(
-            userService.getUserByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"))
-        );
+                userService.getUserByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé")));
     }
 }
