@@ -1,12 +1,14 @@
 package com.openclassrooms.mddapi.model.mapper;
 
-import com.openclassrooms.mddapi.model.response.AuthSuccess;
+import com.openclassrooms.mddapi.model.response.AuthResponse;
 
 public class AuthMapper {
     
-    public static AuthSuccess toResponse(String token) {
-        AuthSuccess response = new AuthSuccess();
+    public static AuthResponse toResponse(String token) {
+        AuthResponse response = new AuthResponse();
+
         response.setToken(token);
+        
         return response;
     }
 }

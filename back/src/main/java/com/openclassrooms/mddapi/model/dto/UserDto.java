@@ -1,13 +1,12 @@
-package com.openclassrooms.mddapi.model.response;
+package com.openclassrooms.mddapi.model.dto;
 
 import java.sql.Date;
 
 import lombok.Data;
 
 @Data
-public class UserResponse {
+public class UserDto {
 
-    private Integer id;
     private String username;
     private String email;
     private Date createdAt;

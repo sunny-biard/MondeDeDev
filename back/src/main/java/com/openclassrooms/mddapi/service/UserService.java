@@ -7,9 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
 import com.openclassrooms.mddapi.model.entity.User;
-import com.openclassrooms.mddapi.model.mapper.UserMapper;
-import com.openclassrooms.mddapi.model.response.UserResponse;
 import com.openclassrooms.mddapi.repository.UserRepository;
 
 @Service
@@ -34,9 +33,8 @@ public class UserService implements UserDetailsService {
     }
 
     // Récupère un utilisateur par son ID
-    public UserResponse getUserById(@NonNull Integer id) {
-        User user = userRepository.findById(id).orElseThrow();
-        return UserMapper.toDto(user);
+    public Optional<User> getUserById(@NonNull Integer id) {
+        return userRepository.findById(id);
     }
 
     // Méthode requise par UserDetailsService pour l'authentification

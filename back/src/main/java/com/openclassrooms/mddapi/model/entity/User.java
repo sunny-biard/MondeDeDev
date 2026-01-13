@@ -52,9 +52,9 @@ public class User implements UserDetails {
     @JoinTable(
         name = "subscriptions",
         joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "theme_id")
+        inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
-    private List<Theme> subscriptions;
+    private List<Topic> subscriptions;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;

@@ -18,8 +18,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "themes")
-public class Theme {
+@Table(name = "topics")
+public class Topic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +40,6 @@ public class Theme {
     @ManyToMany(mappedBy = "subscriptions", fetch = FetchType.LAZY)
     private List<User> users;
 
-    @OneToMany(mappedBy = "theme", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY)
     private List<Post> posts;
 }
