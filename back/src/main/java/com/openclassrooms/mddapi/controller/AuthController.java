@@ -1,6 +1,5 @@
 package com.openclassrooms.mddapi.controller;
 
-import com.openclassrooms.mddapi.model.dto.UserDto;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.mapper.AuthMapper;
 import com.openclassrooms.mddapi.model.mapper.UserMapper;
