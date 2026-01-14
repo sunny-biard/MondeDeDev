@@ -26,6 +26,9 @@ public class SpringSecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     // Configure les filtres et les endpoints sécurisés
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,18 +46,12 @@ public class SpringSecurityConfig {
         return http.build();
     }
 
-    // Bean pour encoder les mots de passe avec BCrypt
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     // Configure le fournisseur d'authentification avec le service utilisateur et
     // l'encodeur de mot de passe
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(this.userService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
 
         return authProvider;
     }
