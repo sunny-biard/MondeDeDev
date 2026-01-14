@@ -8,14 +8,18 @@ import com.openclassrooms.mddapi.model.dto.PostDto;
 import com.openclassrooms.mddapi.model.entity.Post;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
+
 public class PostMapper {
+
+    @Autowired
+    private TopicService topicService;
 
     public Post toEntity(@NonNull User user, PostCreateRequest req) {
         Post post = new Post();
-        
+
         post.setTitle(req.getTitle());
         post.setContent(req.getContent());
-        post.setTopic(req.getTopic());
+        post.setTopic(topicService.getTopicById(req.getTopicId()));
         post.setCreatedAt(new Date(System.currentTimeMillis()));
         post.setUpdatedAt(new Date(System.currentTimeMillis()));
         post.setUser(user);
