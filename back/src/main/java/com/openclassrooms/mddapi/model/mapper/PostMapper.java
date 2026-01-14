@@ -6,20 +6,19 @@ import org.springframework.lang.NonNull;
 
 import com.openclassrooms.mddapi.model.dto.PostDto;
 import com.openclassrooms.mddapi.model.entity.Post;
+import com.openclassrooms.mddapi.model.entity.Topic;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
 
 public class PostMapper {
 
-    @Autowired
-    private TopicService topicService;
-
-    public Post toEntity(@NonNull User user, PostCreateRequest req) {
+    @NonNull
+    public static Post toEntity(@NonNull User user, @NonNull Topic topic, PostCreateRequest req) {
         Post post = new Post();
 
         post.setTitle(req.getTitle());
         post.setContent(req.getContent());
-        post.setTopic(topicService.getTopicById(req.getTopicId()));
+        post.setTopic(topic);
         post.setCreatedAt(new Date(System.currentTimeMillis()));
         post.setUpdatedAt(new Date(System.currentTimeMillis()));
         post.setUser(user);
@@ -27,7 +26,8 @@ public class PostMapper {
         return post;
     }
 
-    public PostDto toDto(Post post) {
+    @NonNull
+    public static PostDto toDto(Post post) {
         PostDto postDto = new PostDto();
 
         postDto.setTitle(post.getTitle());

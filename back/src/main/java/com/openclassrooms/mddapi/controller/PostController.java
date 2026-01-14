@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.openclassrooms.mddapi.model.dto.PostDto;
 import com.openclassrooms.mddapi.model.entity.Post;
@@ -18,13 +17,6 @@ import com.openclassrooms.mddapi.service.PostService;
 import com.openclassrooms.mddapi.service.UserService;
 
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -42,11 +34,39 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostDto>> getUserFeed(
+            @RequestParam(required = false, defaultValue = "desc") String sort) {
+        try {
+            // Récupère l'utilisateur authentifié
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUserByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+            // Récupère le fil personnalisé avec tri (plus récent au plus ancien par défaut)
+            List<PostDto> feed = postService.getFeedForUser(user.getId(), sort);
+
+            return ResponseEntity.ok(feed);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer id) {
         try {
             PostDto post = postService.getPostById(id);
             return ResponseEntity.ok(post);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/topic/{topicId}")
+    public ResponseEntity<List<PostDto>> getPostsByTopic(@PathVariable Integer topicId) {
+        try {
+            List<PostDto> posts = postService.getPostsByTopicId(topicId);
+            return ResponseEntity.ok(posts);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -70,7 +90,9 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePost(@PathVariable Integer id, @Valid @RequestBody PostUpdateRequest req) {
+    public ResponseEntity<?> updatePost(
+            @PathVariable Integer id,
+            @Valid @RequestBody PostUpdateRequest req) {
         try {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();

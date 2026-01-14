@@ -6,6 +6,7 @@ import com.openclassrooms.mddapi.model.mapper.AuthMapper;
 import com.openclassrooms.mddapi.model.mapper.UserMapper;
 import com.openclassrooms.mddapi.model.request.LoginRequest;
 import com.openclassrooms.mddapi.model.request.RegisterRequest;
+import com.openclassrooms.mddapi.model.request.UserUpdateRequest;
 import com.openclassrooms.mddapi.model.response.AuthResponse;
 import com.openclassrooms.mddapi.service.JwtService;
 import com.openclassrooms.mddapi.service.UserService;
@@ -13,6 +14,8 @@ import com.openclassrooms.mddapi.service.UserService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -76,14 +79,41 @@ public class AuthController {
         return AuthMapper.toResponse(token);
     }
 
+    // Récupère le profil de l'utilisateur connecté
     @GetMapping("/me")
-    public UserDto me() {
-        // Récupère l'email de l'utilisateur authentifié
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+    public ResponseEntity<?> me() {
+        try {
+            // Récupère l'utilisateur authentifié
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUserByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
-        // Récupère l'utilisateur en base de données et le convertit en DTO
-        return UserMapper.toDto(
-                userService.getUserByEmail(email)
-                        .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé")));
+            // Convertit en DTO avec les abonnements
+            return ResponseEntity.ok(UserMapper.toDtoWithSubscriptions(user));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // Met à jour le profil de l'utilisateur connecté
+    @PutMapping("/me")
+    public ResponseEntity<?> updateProfile(@RequestBody UserUpdateRequest req) {
+        try {
+            // Récupère l'utilisateur authentifié
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.getUserByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+            // Met à jour le profil
+            User updatedUser = userService.updateUser(user.getId(), req);
+
+            // Retourne le profil mis à jour avec les abonnements
+            return ResponseEntity.ok(UserMapper.toDtoWithSubscriptions(updatedUser));
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("already taken") || e.getMessage().contains("already exists")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            }
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
