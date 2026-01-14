@@ -1,17 +1,17 @@
 package com.openclassrooms.mddapi.model.request;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class RegisterRequest {
 
-    @NotBlank(message = "Username is required")
+    @NotNull(message = "Username is required")
     private String username;
 
-    @NotBlank(message = "Email is required")
+    @NotNull(message = "Email is required")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotNull(message = "Password is required")
     private String password;
 }
