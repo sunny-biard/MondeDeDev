@@ -30,11 +30,12 @@ public class PostMapper {
     public static PostDto toDto(Post post) {
         PostDto postDto = new PostDto();
 
+        postDto.setId(post.getId());
         postDto.setTitle(post.getTitle());
         postDto.setContent(post.getContent());
         postDto.setCreatedAt(post.getCreatedAt());
         postDto.setUpdatedAt(post.getUpdatedAt());
-        postDto.setTopic(post.getTopic());
+        postDto.setTopic(TopicMapper.toDto(post.getTopic()));
         postDto.setUser(UserMapper.toDto(post.getUser()));
 
         return postDto;

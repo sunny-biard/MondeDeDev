@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.openclassrooms.mddapi.model.dto.PostDto;
 import com.openclassrooms.mddapi.model.entity.Post;
 import com.openclassrooms.mddapi.model.entity.User;
+import com.openclassrooms.mddapi.model.mapper.PostMapper;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
 import com.openclassrooms.mddapi.model.request.PostUpdateRequest;
 import com.openclassrooms.mddapi.service.PostService;
@@ -83,7 +84,9 @@ public class PostController {
             // Crée le post
             Post createdPost = postService.createPost(user, req);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdPost);
+            PostDto postDto = PostMapper.toDto(createdPost);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(postDto);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -102,7 +105,9 @@ public class PostController {
             // Met à jour le post
             Post updatedPost = postService.updatePost(id, user.getId(), req);
 
-            return ResponseEntity.ok(updatedPost);
+            PostDto postDto = PostMapper.toDto(updatedPost);
+
+            return ResponseEntity.ok(postDto);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();
@@ -124,7 +129,7 @@ public class PostController {
             // Supprime le post
             postService.deletePost(id, user.getId());
 
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Post successfully deleted");
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();

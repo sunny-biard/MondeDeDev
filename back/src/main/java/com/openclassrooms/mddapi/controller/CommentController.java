@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.openclassrooms.mddapi.model.dto.CommentDto;
 import com.openclassrooms.mddapi.model.entity.Comment;
 import com.openclassrooms.mddapi.model.entity.User;
+import com.openclassrooms.mddapi.model.mapper.CommentMapper;
 import com.openclassrooms.mddapi.model.request.CommentCreateRequest;
 import com.openclassrooms.mddapi.service.CommentService;
 import com.openclassrooms.mddapi.service.UserService;
@@ -48,7 +49,9 @@ public class CommentController {
             // Crée le commentaire
             Comment createdComment = commentService.createComment(user, req);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdComment);
+            CommentDto commentDto = CommentMapper.toDto(createdComment);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(commentDto);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();
@@ -68,7 +71,7 @@ public class CommentController {
             // Supprime le commentaire
             commentService.deleteComment(id, user.getId());
 
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok("Comment successfully deleted");
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();

@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.openclassrooms.mddapi.model.dto.UserDto;
+import com.openclassrooms.mddapi.model.dto.UserProfileDto;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.RegisterRequest;
 
@@ -39,8 +40,14 @@ public class UserMapper {
     }
 
     @NonNull
-    public static UserDto toDtoWithSubscriptions(User user) {
-        UserDto userDto = toDto(user);
+    public static UserProfileDto toDtoWithSubscriptions(User user) {
+        UserProfileDto userDto = new UserProfileDto();
+
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setUsername(user.getActualUsername());
+        userDto.setCreatedAt(user.getCreatedAt());
+        userDto.setUpdatedAt(user.getUpdatedAt());
 
         // Ajoute les abonnements
         if (user.getSubscriptions() != null) {
