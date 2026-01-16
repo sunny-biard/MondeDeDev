@@ -49,9 +49,7 @@ public class CommentController {
             // Crée le commentaire
             Comment createdComment = commentService.createComment(user, req);
 
-            CommentDto commentDto = CommentMapper.toDto(createdComment);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(commentDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(CommentMapper.toDto(createdComment));
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();

@@ -22,11 +22,6 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Enregistre un nouvel utilisateur
-    public User saveUser(@NonNull User user) {
-        return userRepository.save(user);
-    }
-
     // Récupère un utilisateur par son email
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
@@ -40,6 +35,11 @@ public class UserService implements UserDetailsService {
     // Récupère un utilisateur par son ID
     public Optional<User> getUserById(@NonNull Integer id) {
         return userRepository.findById(id);
+    }
+
+    // Enregistre un nouvel utilisateur
+    public User createUser(@NonNull User user) {
+        return userRepository.save(user);
     }
 
     // Met à jour le profil d'un utilisateur

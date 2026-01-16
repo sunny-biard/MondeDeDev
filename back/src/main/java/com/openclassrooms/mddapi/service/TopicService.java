@@ -28,12 +28,6 @@ public class TopicService {
                 .orElseThrow(() -> new RuntimeException("Topic not found"));
     }
 
-    // Récupère un topic par son ID et le convertit en DTO
-    public TopicDto getTopicDtoById(@NonNull Integer id) {
-        Topic topic = getTopicById(id);
-        return TopicMapper.toDto(topic);
-    }
-
     // Récupère tous les topics et les convertit en DTO
     public List<TopicDto> getAllTopics() {
         List<Topic> topics = topicRepository.findAll();

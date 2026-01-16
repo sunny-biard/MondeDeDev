@@ -13,7 +13,6 @@ import com.openclassrooms.mddapi.model.entity.Post;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.mapper.PostMapper;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
-import com.openclassrooms.mddapi.model.request.PostUpdateRequest;
 import com.openclassrooms.mddapi.service.PostService;
 import com.openclassrooms.mddapi.service.UserService;
 
@@ -84,36 +83,8 @@ public class PostController {
             // Crée le post
             Post createdPost = postService.createPost(user, req);
 
-            PostDto postDto = PostMapper.toDto(createdPost);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(postDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(PostMapper.toDto(createdPost));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updatePost(
-            @PathVariable Integer id,
-            @Valid @RequestBody PostUpdateRequest req) {
-        try {
-            // Récupère l'utilisateur authentifié
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
-
-            // Met à jour le post
-            Post updatedPost = postService.updatePost(id, user.getId(), req);
-
-            PostDto postDto = PostMapper.toDto(updatedPost);
-
-            return ResponseEntity.ok(postDto);
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("not found")) {
-                return ResponseEntity.notFound().build();
-            } else if (e.getMessage().contains("Unauthorized")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

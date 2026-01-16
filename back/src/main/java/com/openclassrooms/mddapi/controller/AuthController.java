@@ -68,7 +68,7 @@ public class AuthController {
         User user = UserMapper.toEntity(req, passwordEncoder);
 
         // Sauvegarde de l'utilisateur en base de données
-        userService.saveUser(user);
+        userService.createUser(user);
 
         // Génération du token JWT
         UserDetails userDetails = userService.loadUserByUsername(req.getEmail());

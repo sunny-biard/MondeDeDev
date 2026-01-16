@@ -12,7 +12,6 @@ import com.openclassrooms.mddapi.model.entity.Topic;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.mapper.PostMapper;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
-import com.openclassrooms.mddapi.model.request.PostUpdateRequest;
 import com.openclassrooms.mddapi.repository.PostRepository;
 
 @Service
@@ -32,6 +31,18 @@ public class PostService {
         return PostMapper.toDto(post);
     }
 
+    // Récupère tous les posts d'un topic spécifique
+    public List<PostDto> getPostsByTopicId(@NonNull Integer topicId) {
+        // Vérifie que le topic existe
+        topicService.getTopicById(topicId);
+
+        List<Post> posts = postRepository.findByTopicId(topicId);
+
+        return posts.stream()
+                .map(PostMapper::toDto)
+                .toList();
+    }
+
     // Récupère tous les posts et les convertit en DTO
     public List<PostDto> getAllPosts() {
         List<Post> posts = postRepository.findAll();
@@ -39,55 +50,6 @@ public class PostService {
         return posts.stream()
                 .map(PostMapper::toDto)
                 .toList();
-    }
-
-    // Crée un nouveau post
-    public Post createPost(@NonNull User user, PostCreateRequest req) {
-        // Récupère le topic par son ID
-        Topic topic = topicService.getTopicById(req.getTopicId());
-
-        Post post = PostMapper.toEntity(user, topic, req);
-
-        return postRepository.save(post);
-    }
-
-    // Met à jour un post existant
-    public Post updatePost(@NonNull Integer id, @NonNull Integer userId, PostUpdateRequest req) {
-        Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-
-        // Vérifie que l'utilisateur est le propriétaire du post
-        if (!existingPost.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to update this post");
-        }
-
-        // Met à jour uniquement les champs fournis (non null et non vides)
-        if (req.getTitle() != null && !req.getTitle().isEmpty()) {
-            existingPost.setTitle(req.getTitle());
-        }
-        if (req.getContent() != null && !req.getContent().isEmpty()) {
-            existingPost.setContent(req.getContent());
-        }
-        if (req.getTopic() != null) {
-            existingPost.setTopic(req.getTopic());
-        }
-
-        existingPost.setUpdatedAt(new java.sql.Date(System.currentTimeMillis()));
-
-        return postRepository.save(existingPost);
-    }
-
-    // Supprime un post
-    public void deletePost(@NonNull Integer id, @NonNull Integer userId) {
-        Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-
-        // Vérifie que l'utilisateur est le propriétaire du post
-        if (!existingPost.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this post");
-        }
-
-        postRepository.delete(existingPost);
     }
 
     // Récupère le fil d'actualité personnalisé de l'utilisateur
@@ -115,15 +77,26 @@ public class PostService {
                 .toList();
     }
 
-    // Récupère tous les posts d'un topic spécifique
-    public List<PostDto> getPostsByTopicId(@NonNull Integer topicId) {
-        // Vérifie que le topic existe
-        topicService.getTopicById(topicId);
+    // Crée un nouveau post
+    public Post createPost(@NonNull User user, PostCreateRequest req) {
+        // Récupère le topic par son ID
+        Topic topic = topicService.getTopicById(req.getTopicId());
 
-        List<Post> posts = postRepository.findByTopicId(topicId);
+        Post post = PostMapper.toEntity(user, topic, req);
 
-        return posts.stream()
-                .map(PostMapper::toDto)
-                .toList();
+        return postRepository.save(post);
+    }
+
+    // Supprime un post
+    public void deletePost(@NonNull Integer id, @NonNull Integer userId) {
+        Post existingPost = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // Vérifie que l'utilisateur est le propriétaire du post
+        if (!existingPost.getUser().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized to delete this post");
+        }
+
+        postRepository.delete(existingPost);
     }
 }

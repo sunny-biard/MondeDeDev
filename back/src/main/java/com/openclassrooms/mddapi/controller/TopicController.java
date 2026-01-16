@@ -9,7 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.openclassrooms.mddapi.model.dto.TopicDto;
+import com.openclassrooms.mddapi.model.entity.Topic;
 import com.openclassrooms.mddapi.model.entity.User;
+import com.openclassrooms.mddapi.model.mapper.TopicMapper;
 import com.openclassrooms.mddapi.service.TopicService;
 import com.openclassrooms.mddapi.service.UserService;
 
@@ -32,8 +34,8 @@ public class TopicController {
     @GetMapping("/{id}")
     public ResponseEntity<TopicDto> getTopicById(@PathVariable Integer id) {
         try {
-            TopicDto topic = topicService.getTopicDtoById(id);
-            return ResponseEntity.ok(topic);
+            Topic topic = topicService.getTopicById(id);
+            return ResponseEntity.ok(TopicMapper.toDto(topic));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
