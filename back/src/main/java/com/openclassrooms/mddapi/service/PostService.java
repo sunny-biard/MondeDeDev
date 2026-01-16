@@ -23,6 +23,31 @@ public class PostService {
     @Autowired
     private TopicService topicService;
 
+    // Récupère le fil d'actualité personnalisé de l'utilisateur
+    public List<PostDto> getAllPosts(@NonNull Integer userId) {
+        List<Post> posts = postRepository.findByUserSubscriptionsDesc(userId);
+
+        return posts.stream()
+                .map(PostMapper::toDto)
+                .toList();
+    }
+
+    // Récupère le fil d'actualité personnalisé de l'utilisateur avec possibilité de
+    // choisir l'ordre de tri
+    public List<PostDto> getAllPosts(@NonNull Integer userId, @NonNull String sortOrder) {
+        List<Post> posts;
+
+        if (sortOrder.equalsIgnoreCase("asc")) {
+            posts = postRepository.findByUserSubscriptionsAsc(userId);
+        } else {
+            posts = postRepository.findByUserSubscriptionsDesc(userId);
+        }
+
+        return posts.stream()
+                .map(PostMapper::toDto)
+                .toList();
+    }
+
     // Récupère un post par son ID et le convertit en DTO
     public PostDto getPostById(@NonNull Integer id) {
         Post post = postRepository.findById(id)
@@ -37,40 +62,6 @@ public class PostService {
         topicService.getTopicById(topicId);
 
         List<Post> posts = postRepository.findByTopicId(topicId);
-
-        return posts.stream()
-                .map(PostMapper::toDto)
-                .toList();
-    }
-
-    // Récupère tous les posts et les convertit en DTO
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
-
-        return posts.stream()
-                .map(PostMapper::toDto)
-                .toList();
-    }
-
-    // Récupère le fil d'actualité personnalisé de l'utilisateur
-    public List<PostDto> getFeedForUser(@NonNull Integer userId) {
-        List<Post> posts = postRepository.findByUserSubscriptionsDesc(userId);
-
-        return posts.stream()
-                .map(PostMapper::toDto)
-                .toList();
-    }
-
-    // Récupère le fil d'actualité personnalisé de l'utilisateur avec possibilité de
-    // choisir l'ordre de tri
-    public List<PostDto> getFeedForUser(@NonNull Integer userId, @NonNull String sortOrder) {
-        List<Post> posts;
-
-        if ("asc".equalsIgnoreCase(sortOrder)) {
-            posts = postRepository.findByUserSubscriptionsAsc(userId);
-        } else {
-            posts = postRepository.findByUserSubscriptionsDesc(userId);
-        }
 
         return posts.stream()
                 .map(PostMapper::toDto)

@@ -29,13 +29,7 @@ public class PostController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<PostDto>> getAllPosts() {
-        List<PostDto> posts = postService.getAllPosts();
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/feed")
-    public ResponseEntity<List<PostDto>> getUserFeed(
+    public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false, defaultValue = "desc") String sort) {
         try {
             // Récupère l'utilisateur authentifié
@@ -44,7 +38,7 @@ public class PostController {
                     .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
 
             // Récupère le fil personnalisé avec tri (plus récent au plus ancien par défaut)
-            List<PostDto> feed = postService.getFeedForUser(user.getId(), sort);
+            List<PostDto> feed = postService.getAllPosts(user.getId(), sort);
 
             return ResponseEntity.ok(feed);
         } catch (RuntimeException e) {
