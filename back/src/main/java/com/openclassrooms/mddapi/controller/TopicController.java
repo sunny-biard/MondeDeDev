@@ -47,7 +47,7 @@ public class TopicController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Abonne l'utilisateur au topic
             topicService.subscribeToTopic(user.getId(), id);
@@ -69,7 +69,7 @@ public class TopicController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Désabonne l'utilisateur du topic
             topicService.unsubscribeFromTopic(user.getId(), id);
@@ -91,7 +91,7 @@ public class TopicController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             List<TopicDto> subscriptions = topicService.getUserSubscriptions(user.getId());
             return ResponseEntity.ok(subscriptions);

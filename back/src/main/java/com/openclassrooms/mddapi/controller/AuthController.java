@@ -61,7 +61,7 @@ public class AuthController {
 
         // Vérifie aussi le username
         if (userService.getUserByUsername(req.getUsername()).isPresent()) {
-            throw new RuntimeException("Username déjà utilisé");
+            throw new RuntimeException("Username already taken");
         }
 
         // Création de l'utilisateur
@@ -85,7 +85,7 @@ public class AuthController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Convertit en DTO avec les abonnements
             return ResponseEntity.ok(UserMapper.toDtoWithSubscriptions(user));
@@ -101,7 +101,7 @@ public class AuthController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Met à jour le profil
             User updatedUser = userService.updateUser(user.getId(), req);

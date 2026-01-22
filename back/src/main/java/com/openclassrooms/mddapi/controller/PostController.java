@@ -35,7 +35,7 @@ public class PostController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Récupère le fil personnalisé avec tri (plus récent au plus ancien par défaut)
             List<PostDto> feed = postService.getAllPosts(user.getId(), sort);
@@ -72,7 +72,7 @@ public class PostController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Crée le post
             Post createdPost = postService.createPost(user, req);
@@ -89,7 +89,7 @@ public class PostController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Supprime le post
             postService.deletePost(id, user.getId());

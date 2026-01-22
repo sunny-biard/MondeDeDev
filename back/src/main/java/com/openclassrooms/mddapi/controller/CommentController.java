@@ -44,7 +44,7 @@ public class CommentController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Crée le commentaire
             Comment createdComment = commentService.createComment(user, req);
@@ -64,7 +64,7 @@ public class CommentController {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
             // Supprime le commentaire
             commentService.deleteComment(id, user.getId());
