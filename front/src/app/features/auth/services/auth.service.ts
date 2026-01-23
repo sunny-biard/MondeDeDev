@@ -5,26 +5,29 @@ import { Router } from '@angular/router';
 import { RegisterRequest } from '../interfaces/register-request.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { AuthResponse } from '../interfaces/auth-response.interface';
+import { User } from '../../../interfaces/user.interface';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private pathService = 'api/auth';
-  private tokenKey = 'auth_token';
+  private baseUrl = environment.baseUrl; 
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {}
+  constructor(private http: HttpClient) {}
 
   // Inscription
   register(request: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.pathService}/register`, request);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/register`, request);
   }
 
   // Connexion
   login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.pathService}/login`, request);
+    return this.http.post<AuthResponse>(`${this.baseUrl}/auth/login`, request);
+  }
+
+  // Récupérer les informations de l'utilisateur connecté
+  me(): Observable<User> {
+    return this.http.get<User>(`${this.baseUrl}/auth/me`);
   }
 }

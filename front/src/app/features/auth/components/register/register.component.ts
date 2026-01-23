@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { SessionService } from '../../../../services/session.service';
 
 @Component({
   selector: 'app-register',
@@ -15,6 +16,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private sessionService: SessionService,
     private router: Router
   ) {}
 
@@ -30,8 +32,16 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
-          localStorage.setItem('auth_token', response.token);
-          this.router.navigate(['/posts']);
+          this.sessionService.logIn(response.token);
+          this.authService.me().subscribe({
+            next: (user) => {
+              this.sessionService.setUser(user);
+              this.router.navigate(['/posts']);
+            },
+            error: () => {
+              this.onError = true;
+            }
+          });
         },
         error: () => {
           this.onError = true;

@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HttpErrorResponse
-} from '@angular/common/http';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../features/auth/services/auth.service';
 import { Router } from '@angular/router';
+import { SessionService } from '../services/session.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
-    private authService: AuthService,
+    private sessionService: SessionService,
     private router: Router
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const token = this.authService.getToken();
+    const token = this.sessionService.getToken();
 
     if (token) {
       request = request.clone({
@@ -33,12 +27,12 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          // Si une erreur 401 Unauthorized est reçue, rediriger vers la page de connexion
-          this.authService.logout();
+          // Token invalide ou expiré, déconnexion de l'utilisateur
+          this.sessionService.logOut();
           this.router.navigate(['/login']);
         }
         return throwError(() => error);
       })
     );
-  }
+43  }
 }

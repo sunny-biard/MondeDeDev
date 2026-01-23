@@ -13,6 +13,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { RegisterComponent } from './features/auth/components/register/register.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AuthRoutingModule } from './features/auth/auth-routing.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
   ],
   imports: [
     BrowserModule,
+    AuthRoutingModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
