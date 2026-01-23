@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
+export class LoginComponent implements OnInit {
+  loginForm!: FormGroup;
   onError: boolean = false;
 
   constructor(
@@ -19,18 +19,18 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.registerForm = this.fb.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+    this.loginForm = this.fb.group({
+      identifier: ['', Validators.required],
+      password: ['', Validators.required]
     });
   }
 
   onSubmit(): void {
-    if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value).subscribe({
+    if (this.loginForm.valid) {
+      this.authService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.router.navigate(['/login']);
+          localStorage.setItem('auth_token', response.token);
+          this.router.navigate(['/posts']);
         },
         error: () => {
           this.onError = true;

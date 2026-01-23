@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss']
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
   onError: boolean = false;
 
   constructor(
@@ -19,17 +19,18 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loginForm = this.fb.group({
-      identifier: ['', Validators.required],
-      password: ['', Validators.required]
+    this.registerForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value).subscribe({
+    if (this.registerForm.valid) {
+      this.authService.register(this.registerForm.value).subscribe({
         next: (response) => {
-          this.authService.saveToken(response.token);
+          localStorage.setItem('auth_token', response.token);
           this.router.navigate(['/posts']);
         },
         error: () => {
