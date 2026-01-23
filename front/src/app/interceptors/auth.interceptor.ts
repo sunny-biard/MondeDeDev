@@ -34,5 +34,5 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(() => error);
       })
     );
-43  }
+43 }
 }

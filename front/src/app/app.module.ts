@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,13 +15,19 @@ import { LoginComponent } from './features/auth/components/login/login.component
 import { RegisterComponent } from './features/auth/components/register/register.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthRoutingModule } from './features/auth/auth-routing.module';
+import { PostsComponent } from './pages/posts/posts.component';
+import { TopicsComponent } from './pages/topics/topics.component';
+import { MeComponent } from './pages/me/me.component';
 
 @NgModule({
   declarations: [
     AppComponent, 
     HomeComponent, 
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    PostsComponent,
+    TopicsComponent,
+    MeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +37,7 @@ import { AuthRoutingModule } from './features/auth/auth-routing.module';
     HttpClientModule,
     ReactiveFormsModule,
     MatButtonModule,
+    MatMenuModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
