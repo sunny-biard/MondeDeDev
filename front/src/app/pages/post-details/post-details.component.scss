@@ -3,8 +3,6 @@
     margin: 0 auto;
     padding: 40px 20px;
     position: relative;
-    display: flex;
-    flex-direction: row;
 }
 
 .back-button {
@@ -61,6 +59,9 @@
     margin: 0 0 12px 0;
     color: #333;
     line-height: 1.3;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .post-content {
@@ -69,6 +70,9 @@
     line-height: 1.8;
     margin: 24px 0;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .divider {
@@ -157,6 +161,9 @@
     margin: 0;
     line-height: 1.6;
     white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .no-comments {

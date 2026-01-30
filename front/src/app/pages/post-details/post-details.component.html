@@ -32,7 +32,7 @@
                 <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
             </div>
 
-            <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" class="comment-form">
+            <form [formGroup]="commentForm" #formDirective="ngForm" (ngSubmit)="onSubmitComment(formDirective)" class="comment-form">
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Écrivez ici votre commentaire</mat-label>
                     <textarea 

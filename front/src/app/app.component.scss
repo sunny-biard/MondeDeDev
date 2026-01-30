@@ -33,7 +33,6 @@
     }
 }
 
-// Navigation Desktop
 .desktop-nav {
     display: flex;
     gap: 24px;
@@ -70,7 +69,6 @@
     }
 }
 
-// Bouton utilisateur Desktop
 .user-icon-button {
     margin-left: 16px;
     display: flex;
@@ -96,7 +94,6 @@
     }
 }
 
-// Menu hamburger Mobile
 .mobile-menu-button {
     display: none;
 
@@ -114,52 +111,6 @@
     flex-direction: column;
 }
 
-// Styles pour le menu déroulant mobile
-::ng-deep .mobile-dropdown-menu {
-    .mat-mdc-menu-panel {
-        min-width: 200px;
-        margin-top: 8px;
-    }
-
-    .mobile-menu-content {
-        padding: 8px 0;
-    }
-
-    .mobile-menu-item {
-        font-size: 16px;
-        padding: 12px 24px;
-        min-height: 48px;
-        
-        &.logout-item {
-            color: #d32f2f;
-            font-weight: 500;
-            border-bottom: 1px solid #e0e0e0;
-            margin-bottom: 4px;
-        }
-
-        &.user-item {
-            border-top: 1px solid #e0e0e0;
-            margin-top: 4px;
-            display: flex;
-            justify-content: center;
-
-            mat-icon {
-                color: #666;
-                margin: 0;
-            }
-        }
-
-        &:hover:not(.logout-item) {
-            background-color: #f5f5f5;
-        }
-
-        &.logout-item:hover {
-            background-color: #ffebee;
-        }
-    }
-}
-
-// Overlay pour la sidebar mobile
 .mobile-sidebar-overlay {
     position: fixed;
     top: 0;
@@ -178,7 +129,6 @@
     }
 }
 
-// Sidebar Mobile
 .mobile-sidebar {
     position: fixed;
     top: 0;

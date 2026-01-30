@@ -39,7 +39,7 @@
 
 .posts-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
     width: 100%;
 }
@@ -70,6 +70,9 @@
     font-weight: 600;
     margin: 0 0 12px 0;
     color: #333;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .post-meta {
@@ -84,6 +87,15 @@
     color: #666;
     margin: 0;
     line-height: 1.6;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .subscribe-button {

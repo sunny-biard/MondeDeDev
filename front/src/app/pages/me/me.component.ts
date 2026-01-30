@@ -37,7 +37,10 @@ export class MeComponent implements OnInit {
     this.profileForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(8)]]
+      password: ['', [
+        Validators.minLength(8), 
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+      ]]
     });
   }
 
@@ -112,6 +115,7 @@ export class MeComponent implements OnInit {
         },
         error: (error) => {
           console.error("Erreur lors de la mise à jour du profil:", error);
+          this.snackBar.open("Impossible de mettre à jour le profil", "Fermer", { duration: 3000 });
         }
       });
     }
@@ -127,6 +131,7 @@ export class MeComponent implements OnInit {
       },
       error: (error) => {
         console.error("Erreur lors du désabonnement:", error);
+        this.snackBar.open("Impossible de se désabonner", "Fermer", { duration: 3000 });
       }
     });
   }

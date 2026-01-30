@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { PostService } from '../../services/post.service';
 import { SessionService } from '../../services/session.service';
 import { Post } from '../../interfaces/post.interface';
@@ -86,7 +86,7 @@ export class PostDetailsComponent implements OnInit {
   }
 
   // Soumettre un commentaire
-  onSubmitComment(): void {
+  onSubmitComment(formDirective: FormGroupDirective): void {
     if (this.commentForm.valid && this.post) {
       const commentData = {
         content: this.commentForm.value.content,
@@ -97,6 +97,7 @@ export class PostDetailsComponent implements OnInit {
         next: (comment: Comment) => {
           this.comments.push(comment);
           this.commentForm.reset();
+          formDirective.resetForm();
           this.snackBar.open("Commentaire ajouté avec succès", "Fermer", { duration: 2000 });
         },
         error: (error) => {
