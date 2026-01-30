@@ -2,7 +2,7 @@
     <header class="app-header" *ngIf="showMenu">
         <div class="header-content">
             <div class="logo-container">
-                <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" />
+                <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" routerLink="/posts" routerLinkActive="active"/>
             </div>
 
             <nav class="desktop-nav">
@@ -14,7 +14,6 @@
             <div class="desktop-actions">
                 <button mat-menu-item routerLink="/me">
                     <mat-icon>person</mat-icon>
-                    <span>Mon profil</span>
                 </button>
             </div>
 

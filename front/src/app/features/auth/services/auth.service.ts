@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { RegisterRequest } from '../interfaces/register-request.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { AuthResponse } from '../interfaces/auth-response.interface';
-import { User } from '../../../interfaces/user.interface';
 import { environment } from '../../../../environments/environment';
+import { UserProfile } from '../../../interfaces/user-profile.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +26,7 @@ export class AuthService {
   }
 
   // Récupérer les informations de l'utilisateur connecté
-  me(): Observable<User> {
-    return this.http.get<User>(`${this.baseUrl}/auth/me`);
+  me(): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.baseUrl}/auth/me`);
   }
 }

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../interfaces/user.interface';
+import { UserProfile } from '../interfaces/user-profile.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SessionService {
   private readonly TOKEN_KEY = 'auth_token';
-  private userSubject = new BehaviorSubject<User | null>(null);
-  public user$: Observable<User | null> = this.userSubject.asObservable();
+  private userSubject = new BehaviorSubject<UserProfile | null>(null);
+  public user$: Observable<UserProfile | null> = this.userSubject.asObservable();
 
   constructor() {
     if (this.getToken()) {}
@@ -25,7 +25,7 @@ export class SessionService {
   }
 
   // Enregistre le token et initialise la session
-  public logIn(token: string, user?: User): void {
+  public logIn(token: string, user?: UserProfile): void {
     localStorage.setItem(this.TOKEN_KEY, token);
     if (user) {
       this.userSubject.next(user);
@@ -33,12 +33,12 @@ export class SessionService {
   }
 
   // Définit les informations utilisateur
-  public setUser(user: User): void {
+  public setUser(user: UserProfile): void {
     this.userSubject.next(user);
   }
 
   // Récupère les informations utilisateur actuelles
-  public getUser(): User | null {
+  public getUser(): UserProfile | null {
     return this.userSubject.value;
   }
 

@@ -96,7 +96,7 @@ public class AuthController {
 
     // Met à jour le profil de l'utilisateur connecté
     @PutMapping("/me")
-    public ResponseEntity<?> updateProfile(@RequestBody UserUpdateRequest req) {
+    public AuthResponse updateProfile(@RequestBody UserUpdateRequest req) {
         try {
             // Récupère l'utilisateur authentifié
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -106,13 +106,14 @@ public class AuthController {
             // Met à jour le profil
             User updatedUser = userService.updateUser(user.getId(), req);
 
-            // Retourne le profil mis à jour avec les abonnements
-            return ResponseEntity.ok(UserMapper.toDtoWithSubscriptions(updatedUser));
+            // Génération d'un nouveau token JWT
+            UserDetails userDetails = userService.loadUserByUsername(updatedUser.getEmail());
+            String token = jwtService.generateToken(userDetails);
+
+            // Retourne le token dans la réponse
+            return AuthMapper.toResponse(token);
         } catch (RuntimeException e) {
-            if (e.getMessage().contains("already taken") || e.getMessage().contains("already exists")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-            }
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 }

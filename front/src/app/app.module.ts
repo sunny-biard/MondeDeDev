@@ -4,6 +4,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -41,6 +42,7 @@ import { MeComponent } from './pages/me/me.component';
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule
   ],
   providers: [
     {

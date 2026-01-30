@@ -1,1 +1,64 @@
-<p>me works!</p>
+<div class="me-container">
+    <h1 class="section-title">Profil utilisateur</h1>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" type="text" />
+            <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+                Ce champ est requis
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>email@email.fr</mat-label>
+            <input matInput formControlName="email" type="email" />
+            <mat-error *ngIf="profileForm.get('email')?.hasError('required')">
+                Ce champ est requis
+            </mat-error>
+            <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
+                Adresse e-mail invalide
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Mot de passe</mat-label>
+            <input matInput formControlName="password" type="password" />
+        </mat-form-field>
+
+        <button 
+            mat-raised-button 
+            color="primary" 
+            type="submit" 
+            class="submit-button"
+            [disabled]="profileForm.invalid || !formValuesChanges()">
+            <span>Sauvegarder</span>
+        </button>
+    </form>
+
+    <hr class="divider"/>
+
+    <h1 class="section-title">Abonnements</h1>
+
+    <div class="subscriptions-section">
+        <div class="subscriptions-list" *ngIf="subscriptions.length > 0; else noSubscriptions">
+            <div class="subscription-card" *ngFor="let topic of subscriptions">
+                <div class="subscription-info">
+                    <h3 class="subscription-title">{{ topic.title }}</h3>
+                    <p class="subscription-description">{{ topic.description }}</p>
+                </div>
+                <button 
+                    mat-raised-button 
+                    color="primary"
+                    class="submit-button"
+                    (click)="unsubscribe(topic.id)">
+                    <span>Se désabonner</span>
+                </button>
+            </div>
+        </div>
+
+        <ng-template #noSubscriptions>
+            <p class="no-subscriptions">Vous n'êtes abonné à aucun thème pour le moment.</p>
+        </ng-template>
+    </div>
+</div>
