@@ -43,17 +43,4 @@ public class CommentService {
 
         return commentRepository.save(comment);
     }
-
-    // Supprime un commentaire (uniquement par son auteur)
-    public void deleteComment(@NonNull Integer commentId, @NonNull Integer userId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
-
-        // Vérifie que l'utilisateur est bien l'auteur du commentaire
-        if (!comment.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this comment");
-        }
-
-        commentRepository.delete(comment);
-    }
 }

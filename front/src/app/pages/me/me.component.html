@@ -41,7 +41,7 @@
     <h1 class="section-title">Abonnements</h1>
 
     <div class="subscriptions-section">
-        <div class="subscriptions-list" *ngIf="subscriptions.length > 0; else noSubscriptions">
+        <div class="subscriptions-grid" *ngIf="subscriptions.length > 0; else noSubscriptions">
             <div class="subscription-card" *ngFor="let topic of subscriptions">
                 <div class="subscription-info">
                     <h3 class="subscription-title">{{ topic.title }}</h3>

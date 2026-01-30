@@ -52,7 +52,9 @@ public class TopicController {
             // Abonne l'utilisateur au topic
             topicService.subscribeToTopic(user.getId(), id);
 
-            return ResponseEntity.ok().body("Successfully subscribed to topic");
+            // Retourne la liste des abonnements mise à jour
+            List<TopicDto> subscriptions = topicService.getUserSubscriptions(user.getId());
+            return ResponseEntity.ok(subscriptions);
         } catch (RuntimeException e) {
             if (e.getMessage().contains("not found")) {
                 return ResponseEntity.notFound().build();

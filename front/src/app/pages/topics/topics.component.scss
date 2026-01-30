@@ -1,0 +1,101 @@
+.topics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-weight: 500;
+    margin-bottom: 32px;
+    color: #333;
+    text-align: left;
+}
+
+.topics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.topic-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+
+    button {
+        transform: translateX(50%);
+    }
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+    }
+}
+
+.topic-info {
+    flex: 1;
+}
+
+.topic-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #333;
+}
+
+.topic-description {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.subscribe-button {
+  width: 50%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.no-topics {
+    text-align: center;
+    color: #666;
+    padding: 60px 20px;
+    font-size: 18px;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .topics-container {
+        padding: 20px 16px;
+    }
+
+    .page-title {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .topics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-card {
+        padding: 20px;
+    }
+
+    .topic-title {
+        font-size: 18px;
+    }
+
+    .subscribe-button {
+        height: 44px;
+        font-size: 15px;
+    }
+}

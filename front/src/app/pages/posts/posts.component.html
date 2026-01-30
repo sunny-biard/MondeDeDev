@@ -1,1 +1,36 @@
-<p>posts works!</p>
+<div class="posts-container">
+    <div class = "posts-actions">
+        <button 
+            mat-raised-button 
+            color="primary"
+            class="create-post-button"
+            (click)="createPost()">
+            <span>Créer un article</span>
+        </button>
+        <button class="sort-button" (click)="toggleSort()">
+            <span>Trier par </span>
+            <mat-icon
+            class="sort-icon"
+            [class.up]="sortDirection === 'asc'">
+            arrow_downward
+            </mat-icon>
+        </button>
+    </div>
+
+    <div class="posts-grid" *ngIf="posts.length > 0; else noposts">
+        <div class="post-card" *ngFor="let post of posts" (click)="viewPost(post.id)">
+            <div class="post-info">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <div class="post-meta">
+                    <p>{{ post.createdAt | date:'longDate' }}</p>
+                    <p>{{ post.user.username }}</p>
+                </div>
+                <p class="post-content">{{ post.content }}</p>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noposts>
+        <p class="no-posts">Aucun article disponible pour le moment.</p>
+    </ng-template>
+</div>

@@ -1,0 +1,62 @@
+<div class="post-detail-container">
+    <div class="post-detail" *ngIf="post">
+        <div class="post-header">
+            <button class="back-button" (click)="goBack()">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <h1 class="post-title">{{ post.title }}</h1>
+        </div>
+        <div class="post-meta">
+            <p>{{ post.createdAt | date: 'dd/MM/yyyy' }}</p>
+            <p>{{ post.user.username }}</p>
+            <p>{{ post.topic.title }}</p>
+        </div>
+
+        <div class="post-content">
+            {{ post.content }}
+        </div>
+
+        <hr class="divider" />
+
+        <div class="comments-section">
+            <h2 class="comments-title">Commentaires</h2>
+
+            <div class="comments-list" *ngIf="comments.length > 0">
+                <div class="comment-card" *ngFor="let comment of comments">
+                    <span class="comment-author">{{ comment.user.username }}</span>
+                    <p class="comment-content">{{ comment.content }}</p>
+                </div>
+            </div>
+
+            <div class="no-comments" *ngIf="comments.length === 0">
+                <p>Aucun commentaire pour le moment. Soyez le premier à commenter !</p>
+            </div>
+
+            <form [formGroup]="commentForm" (ngSubmit)="onSubmitComment()" class="comment-form">
+                <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Écrivez ici votre commentaire</mat-label>
+                    <textarea 
+                        matInput 
+                        formControlName="content" 
+                        rows="4"
+                        placeholder="Écrivez ici votre commentaire">
+                    </textarea>
+                    <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
+                        Ce champ est requis
+                    </mat-error>
+                    <mat-error *ngIf="commentForm.get('content')?.hasError('minlength')">
+                        Le commentaire doit contenir au moins 3 caractères
+                    </mat-error>
+                </mat-form-field>
+
+                <button 
+                    mat-icon-button 
+                    color="primary" 
+                    type="submit" 
+                    class="submit-button">
+                    <mat-icon>send</mat-icon>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

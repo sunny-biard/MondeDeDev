@@ -77,17 +77,4 @@ public class PostService {
 
         return postRepository.save(post);
     }
-
-    // Supprime un post
-    public void deletePost(@NonNull Integer id, @NonNull Integer userId) {
-        Post existingPost = postRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Post not found"));
-
-        // Vérifie que l'utilisateur est le propriétaire du post
-        if (!existingPost.getUser().getId().equals(userId)) {
-            throw new RuntimeException("Unauthorized to delete this post");
-        }
-
-        postRepository.delete(existingPost);
-    }
 }

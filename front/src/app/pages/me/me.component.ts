@@ -4,7 +4,7 @@ import { UserService } from '../../services/user.service';
 import { TopicService } from '../../services/topic.service';
 import { SessionService } from '../../services/session.service';
 import { Topic } from '../../interfaces/topic.interface';
-import { UserProfile } from '../../interfaces/user-profile.interface';
+import { User } from '../../interfaces/user.interface';
 import { AuthResponse } from '../../features/auth/interfaces/auth-response.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -37,21 +37,21 @@ export class MeComponent implements OnInit {
     this.profileForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(6)]]
+      password: ['', [Validators.minLength(8)]]
     });
   }
 
   // Charge le profil de l'utilisateur
   private loadUserProfile(): void {
     this.userService.getProfile().subscribe({
-      next: (profile: UserProfile) => {
+      next: (user: User) => {
         this.profileForm.patchValue({
-          username: profile.username,
-          email: profile.email,
+          username: user.username,
+          email: user.email,
           password: ''
         });
         this.initialFormValues = this.profileForm.value;
-        this.sessionService.setUser(profile);
+        this.sessionService.setUser(user);
       },
       error: (error) => {
         console.error("Erreur lors du chargement du profil:", error);

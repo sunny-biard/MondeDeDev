@@ -2,37 +2,61 @@
     <header class="app-header" *ngIf="showMenu">
         <div class="header-content">
             <div class="logo-container">
-                <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" routerLink="/posts" routerLinkActive="active"/>
+                <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" routerLink="/posts"/>
             </div>
 
             <nav class="desktop-nav">
-                <button class="logout-text" (click)="logout()">Se déconnecter</button>
-                <a routerLink="/posts" routerLinkActive="active">Articles</a>
-                <a routerLink="/topics" routerLinkActive="active">Thèmes</a>
+                <button class="nav-link logout" (click)="logout()">Se déconnecter</button>
+                <a class="nav-link" routerLink="/posts" routerLinkActive="active">Articles</a>
+                <a class="nav-link" routerLink="/topics" routerLinkActive="active">Thèmes</a>
             </nav>
 
-            <div class="desktop-actions">
-                <button mat-menu-item routerLink="/me">
-                    <mat-icon>person</mat-icon>
+            <button class="user-icon-button desktop-only" mat-icon-button routerLink="/me">
+                <mat-icon>account_circle</mat-icon>
+            </button>
+
+            <button class="mobile-menu-button" mat-icon-button (click)="toggleMobileSidebar()">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-sidebar-overlay" 
+         [class.active]="isMobileSidebarOpen" 
+         (click)="closeMobileSidebar()"
+         *ngIf="showMenu">
+    </div>
+
+    <aside class="mobile-sidebar" 
+           [class.open]="isMobileSidebarOpen"
+           *ngIf="showMenu">
+        <div class="mobile-sidebar-content">
+            <div class="mobile-sidebar-header">
+                <img src="/assets/logo_p6.png" alt="MDD Logo" class="sidebar-logo"/>
+                <button class="close-sidebar-button" mat-icon-button (click)="closeMobileSidebar()">
+                    <mat-icon>close</mat-icon>
                 </button>
             </div>
 
-            <button class="mobile-menu-button" mat-icon-button [matMenuTriggerFor]="mobileMenu">
-                <mat-icon>menu</mat-icon>
-            </button>
-            <mat-menu #mobileMenu="matMenu" class="mobile-menu">
-                <button mat-menu-item (click)="logout()">
-                <span class="logout-text">Se déconnecter</span>
+            <nav class="mobile-sidebar-nav">
+                <button class="mobile-nav-item logout" (click)="logout(); closeMobileSidebar()">
+                    Se déconnecter
                 </button>
-                <div class="mobile-menu-divider"></div>
-                <button mat-menu-item routerLink="/posts">Articles</button>
-                <button mat-menu-item routerLink="/topics">Thèmes</button>
-                <button mat-menu-item routerLink="/me">
+                <a class="mobile-nav-item" routerLink="/posts" (click)="closeMobileSidebar()">
+                    Articles
+                </a>
+                <a class="mobile-nav-item" routerLink="/topics" (click)="closeMobileSidebar()">
+                    Thèmes
+                </a>
+            </nav>
+
+            <div class="mobile-sidebar-footer">
+                <button class="mobile-nav-item user" routerLink="/me" (click)="closeMobileSidebar()">
                     <mat-icon>person</mat-icon>
                 </button>
-            </mat-menu>
+            </div>
         </div>
-    </header>
+    </aside>
 
     <main class="app-main">
         <router-outlet></router-outlet>

@@ -1,0 +1,131 @@
+.posts-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.posts-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.create-post-button {
+    height: 48px;
+    font-size: 16px;
+}
+
+.sort-button {
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: 500;
+    color: #333;
+
+    cursor: pointer;
+}
+
+.sort-icon {
+    font-size: 24px;
+    transition: transform 0.2s ease;
+}
+
+.sort-icon.up {
+    transform: rotate(180deg);
+}
+
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.post-card {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+    }
+}
+
+.post-info {
+    flex: 1;
+}
+
+.post-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    color: #333;
+}
+
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    gap: 16px;
+}
+
+.post-content {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.subscribe-button {
+  width: 50%;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.no-posts {
+    text-align: center;
+    color: #666;
+    padding: 60px 20px;
+    font-size: 18px;
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .posts-container {
+        padding: 20px 16px;
+    }
+
+    .posts-actions {
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .posts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .post-card {
+        padding: 20px;
+    }
+
+    .post-title {
+        font-size: 18px;
+    }
+
+    .subscribe-button {
+        height: 44px;
+        font-size: 15px;
+    }
+}

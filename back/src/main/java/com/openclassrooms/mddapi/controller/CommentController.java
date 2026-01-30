@@ -57,26 +57,4 @@ public class CommentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable Integer id) {
-        try {
-            // Récupère l'utilisateur authentifié
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userService.getUserByEmail(email)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            // Supprime le commentaire
-            commentService.deleteComment(id, user.getId());
-
-            return ResponseEntity.ok("Comment successfully deleted");
-        } catch (RuntimeException e) {
-            if (e.getMessage().contains("not found")) {
-                return ResponseEntity.notFound().build();
-            } else if (e.getMessage().contains("Unauthorized")) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
-            }
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
 }

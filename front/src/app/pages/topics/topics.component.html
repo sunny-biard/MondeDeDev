@@ -1,1 +1,25 @@
-<p>topics works!</p>
+<div class="topics-container">
+    <h1 class="page-title">Thèmes</h1>
+
+    <div class="topics-grid" *ngIf="topics.length > 0; else noTopics">
+        <div class="topic-card" *ngFor="let topic of topics">
+            <div class="topic-info">
+                <h3 class="topic-title">{{ topic.title }}</h3>
+                <p class="topic-description">{{ topic.description }}</p>
+            </div>
+            <button 
+                mat-raised-button 
+                color="primary"
+                type="submit" 
+                class="subscribe-button"
+                [disabled]="isSubscribed(topic.id)"
+                (click)="subscribe(topic.id)">
+                <span>{{ isSubscribed(topic.id) ? "Déjà abonné" : "S'abonner" }}</span>
+            </button>
+        </div>
+    </div>
+
+    <ng-template #noTopics>
+        <p class="no-topics">Aucun thème disponible pour le moment.</p>
+    </ng-template>
+</div>
