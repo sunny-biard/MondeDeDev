@@ -5,13 +5,13 @@
                 <img src="/assets/logo_p6.png" alt="MDD Logo" class="logo" routerLink="/posts"/>
             </div>
 
-            <nav class="desktop-nav">
+            <nav class="desktop-nav" *ngIf="showNavLinks">
                 <button class="nav-link logout" (click)="logout()">Se déconnecter</button>
                 <a class="nav-link" routerLink="/posts" routerLinkActive="active">Articles</a>
                 <a class="nav-link" routerLink="/topics" routerLinkActive="active">Thèmes</a>
             </nav>
 
-            <button class="user-icon-button desktop-only" mat-icon-button routerLink="/me">
+            <button class="user-icon-button desktop-only" *ngIf="showNavLinks" mat-icon-button routerLink="/me">
                 <mat-icon>account_circle</mat-icon>
             </button>
 

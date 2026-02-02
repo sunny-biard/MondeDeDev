@@ -4,14 +4,6 @@
     padding: 40px 20px;
 }
 
-.page-title {
-    font-size: 32px;
-    font-weight: 500;
-    margin-bottom: 32px;
-    color: #333;
-    text-align: left;
-}
-
 .topics-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -75,11 +67,6 @@
 @media (max-width: 768px) {
     .topics-container {
         padding: 20px 16px;
-    }
-
-    .page-title {
-        font-size: 24px;
-        margin-bottom: 24px;
     }
 
     .topics-grid {

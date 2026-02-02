@@ -86,10 +86,9 @@
 }
 
 .comments-title {
-    font-size: 24px;
-    font-weight: 500;
+    font-size: 20px;
+    color: #555;
     margin: 0 0 24px 0;
-    color: #333;
 }
 
 .comment-form {
@@ -187,16 +186,16 @@
         padding: 24px 20px;
     }
 
+    .post-header {
+        align-items: center;
+    }
+
     .post-title {
         font-size: 24px;
     }
 
     .post-content {
         font-size: 15px;
-    }
-
-    .comments-title {
-        font-size: 20px;
     }
 
     .comment-card {

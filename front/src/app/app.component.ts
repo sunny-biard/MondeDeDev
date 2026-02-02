@@ -11,6 +11,7 @@ import { SessionService } from './services/session.service';
 export class AppComponent implements OnInit {
   title = 'MDD';
   showMenu = false;
+  showNavLinks = false;
   isMobileSidebarOpen = false;
 
   constructor(
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Vérifier si on doit afficher le menu
+    // Vérifier si on doit afficher le menu et les liens de navigation au chargement initial
     this.checkMenuVisibility();
 
     // Écouter les changements de route
@@ -33,8 +34,10 @@ export class AppComponent implements OnInit {
 
   private checkMenuVisibility(): void {
     const currentUrl = this.router.url;
-    // Ne pas afficher le menu sur les pages de login et register
-    this.showMenu = !currentUrl.includes('/login') && !currentUrl.includes('/register') && currentUrl !== '/';
+    // Ne pas afficher le menu sur la page d'accueil
+    this.showMenu = currentUrl !== '/';
+    // Ne pas afficher les liens de navigation sur les pages login et register
+    this.showNavLinks = currentUrl !== '/login' && currentUrl !== '/register';
   }
 
   toggleMobileSidebar(): void {
