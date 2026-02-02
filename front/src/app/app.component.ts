@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { SessionService } from './services/session.service';
@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
   title = 'MDD';
   showMenu = false;
   showNavLinks = false;
+  isMobile = false;
   isMobileSidebarOpen = false;
 
   constructor(
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     // Vérifier si on doit afficher le menu et les liens de navigation au chargement initial
+    this.checkIfMobile();
     this.checkMenuVisibility();
 
     // Écouter les changements de route
@@ -32,12 +34,30 @@ export class AppComponent implements OnInit {
     });
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.checkIfMobile();
+  }
+
+  private checkIfMobile(): void {
+    this.isMobile = window.innerWidth <= 768;
+    this.checkMenuVisibility();
+  }
+
   private checkMenuVisibility(): void {
     const currentUrl = this.router.url;
-    // Ne pas afficher le menu sur la page d'accueil
-    this.showMenu = currentUrl !== '/';
+    const isAuthPage = currentUrl === '/login' || currentUrl === '/register';
+    
+    // Sur mobile, masquer le menu sur les pages login et register
+    // Sur ordinateur, masquer le menu sur la page d'accueil
+    if (this.isMobile && isAuthPage) {
+      this.showMenu = false;
+    } else {
+      this.showMenu = currentUrl !== '/';
+    }
+    
     // Ne pas afficher les liens de navigation sur les pages login et register
-    this.showNavLinks = currentUrl !== '/login' && currentUrl !== '/register';
+    this.showNavLinks = !isAuthPage;
   }
 
   toggleMobileSidebar(): void {

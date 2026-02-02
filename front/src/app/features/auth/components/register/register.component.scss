@@ -44,13 +44,7 @@
 }
 
 .logo-container {
-  text-align: center;
-  margin-bottom: 30px;
-
-  .logo {
-    max-width: 150px;
-    height: auto;
-  }
+  display: none;
 }
 
 .auth-title {
@@ -89,6 +83,16 @@
 
 // Responsive
 @media (max-width: 768px) {
+  .logo-container {
+    display: block;
+    text-align: center;
+
+    .logo {
+      max-width: 150px;
+      height: auto;
+    }
+  }
+
   .auth-card {
     padding: 30px 20px;
   }
