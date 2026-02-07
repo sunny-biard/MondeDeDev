@@ -137,14 +137,7 @@
     gap: 16px;
 }
 
-.comment-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.comment-author {
+.comment-author, .comment-date {
     font-size: 14px;
     font-weight: 500;
     color: #333;

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../interfaces/post.interface';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-posts',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 export class PostsComponent implements OnInit {
   posts: Post[] = [];
   sortDirection: 'asc' | 'desc' = 'desc';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private postService: PostService,
@@ -29,14 +31,16 @@ export class PostsComponent implements OnInit {
 
   // Charge tous les articles disponibles
   private loadPosts(): void {
-    this.postService.getAllPosts(this.sortDirection).subscribe({
-      next: (posts: Post[]) => {
-        this.posts = posts;
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement des articles:", error);
-      }
-    });
+    this.postService.getAllPosts(this.sortDirection)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (posts: Post[]) => {
+          this.posts = posts;
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement des articles:", error);
+        }
+      });
   }
 
   // Naviguer vers le détail d'un post
@@ -47,5 +51,10 @@ export class PostsComponent implements OnInit {
   // Naviguer vers la création d'un post
   createPost(): void {
     this.router.navigate(['/posts/create']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

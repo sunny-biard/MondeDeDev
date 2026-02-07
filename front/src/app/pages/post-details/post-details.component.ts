@@ -6,6 +6,7 @@ import { SessionService } from '../../services/session.service';
 import { Post } from '../../interfaces/post.interface';
 import { Comment } from '../../interfaces/comment.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-post-details',
@@ -18,6 +19,7 @@ export class PostDetailsComponent implements OnInit {
   commentForm!: FormGroup;
   loading: boolean = true;
   currentUserId: number | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
@@ -58,31 +60,35 @@ export class PostDetailsComponent implements OnInit {
       return;
     }
 
-    this.postService.getPostById(postId).subscribe({
-      next: (post: Post) => {
-        this.post = post;
-        this.loadComments(postId);
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement du post:", error);
-        this.snackBar.open("Impossible de charger l'article", "Fermer", { duration: 3000 });
-        this.router.navigate(['/posts']);
-      }
-    });
+    this.postService.getPostById(postId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (post: Post) => {
+          this.post = post;
+          this.loadComments(postId);
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement du post:", error);
+          this.snackBar.open("Impossible de charger l'article", "Fermer", { duration: 3000 });
+          this.router.navigate(['/posts']);
+        }
+      });
   }
 
   // Charger les commentaires
   private loadComments(postId: number): void {
-    this.postService.getCommentsByPostId(postId).subscribe({
-      next: (comments: Comment[]) => {
-        this.comments = comments;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement des commentaires:", error);
-        this.loading = false;
-      }
-    });
+    this.postService.getCommentsByPostId(postId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (comments: Comment[]) => {
+          this.comments = comments;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement des commentaires:", error);
+          this.loading = false;
+        }
+      });
   }
 
   // Soumettre un commentaire
@@ -93,23 +99,30 @@ export class PostDetailsComponent implements OnInit {
         postId: this.post.id
       };
 
-      this.postService.createComment(commentData).subscribe({
-        next: (comment: Comment) => {
-          this.comments.push(comment);
-          this.commentForm.reset();
-          formDirective.resetForm();
-          this.snackBar.open("Commentaire ajouté avec succès", "Fermer", { duration: 2000 });
-        },
-        error: (error) => {
-          console.error("Erreur lors de l'ajout du commentaire:", error);
-          this.snackBar.open("Impossible d'ajouter le commentaire", "Fermer", { duration: 3000 });
-        }
-      });
+      this.postService.createComment(commentData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (comment: Comment) => {
+            this.comments.push(comment);
+            this.commentForm.reset();
+            formDirective.resetForm();
+            this.snackBar.open("Commentaire ajouté avec succès", "Fermer", { duration: 2000 });
+          },
+          error: (error) => {
+            console.error("Erreur lors de l'ajout du commentaire:", error);
+            this.snackBar.open("Impossible d'ajouter le commentaire", "Fermer", { duration: 3000 });
+          }
+        });
     }
   }
 
   // Retour à la liste des posts
   goBack(): void {
     this.router.navigate(['/posts']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

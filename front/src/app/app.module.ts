@@ -13,35 +13,34 @@ import { MatSelectModule } from '@angular/material/select';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
+import { AuthModule } from './features/auth/auth.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
-import { LoginComponent } from './features/auth/components/login/login.component';
-import { RegisterComponent } from './features/auth/components/register/register.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { AuthRoutingModule } from './features/auth/auth-routing.module';
 import { PostsComponent } from './pages/posts/posts.component';
 import { TopicsComponent } from './pages/topics/topics.component';
 import { MeComponent } from './pages/me/me.component';
 import { PostDetailsComponent } from './pages/post-details/post-details.component';
 import { CreatePostComponent } from './pages/create-post/create-post.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
-    AppComponent, 
-    HomeComponent, 
-    LoginComponent,
-    RegisterComponent,
+    AppComponent,
+    HeaderComponent,
+    HomeComponent,
     PostsComponent,
     TopicsComponent,
     MeComponent,
     PostDetailsComponent,
     CreatePostComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
-    AuthRoutingModule,
+    AuthModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,

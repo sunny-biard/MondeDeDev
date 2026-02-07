@@ -7,6 +7,7 @@ import { Topic } from '../../interfaces/topic.interface';
 import { User } from '../../interfaces/user.interface';
 import { AuthResponse } from '../../features/auth/interfaces/auth-response.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-me',
@@ -17,6 +18,7 @@ export class MeComponent implements OnInit {
   profileForm!: FormGroup;
   subscriptions: Topic[] = [];
   private initialFormValues: any;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -46,32 +48,36 @@ export class MeComponent implements OnInit {
 
   // Charge le profil de l'utilisateur
   private loadUserProfile(): void {
-    this.userService.getProfile().subscribe({
-      next: (user: User) => {
-        this.profileForm.patchValue({
-          username: user.username,
-          email: user.email,
-          password: ''
-        });
-        this.initialFormValues = this.profileForm.value;
-        this.sessionService.setUser(user);
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement du profil:", error);
-      }
-    });
+    this.userService.getProfile()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (user: User) => {
+          this.profileForm.patchValue({
+            username: user.username,
+            email: user.email,
+            password: ''
+          });
+          this.initialFormValues = this.profileForm.value;
+          this.sessionService.setUser(user);
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement du profil:", error);
+        }
+      });
   }
 
   // Charge les abonnements de l'utilisateur
   private loadSubscriptions(): void {
-    this.topicService.getUserSubscriptions().subscribe({
-      next: (topics: Topic[]) => {
-        this.subscriptions = topics;
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement des abonnements:", error);
-      }
-    });
+    this.topicService.getUserSubscriptions()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (topics: Topic[]) => {
+          this.subscriptions = topics;
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement des abonnements:", error);
+        }
+      });
   }
 
   // Vérifie si le formulaire a été modifié
@@ -107,32 +113,41 @@ export class MeComponent implements OnInit {
         updateData.password = currentValues.password;
       }
 
-      this.userService.updateProfile(updateData).subscribe({
-        next: (response: AuthResponse) => {
-          this.sessionService.logIn(response.token);
-          this.loadUserProfile();
-          this.snackBar.open("Profil mis à jour avec succès", "Fermer", { duration: 2000 });
-        },
-        error: (error) => {
-          console.error("Erreur lors de la mise à jour du profil:", error);
-          this.snackBar.open("Impossible de mettre à jour le profil", "Fermer", { duration: 3000 });
-        }
-      });
+      this.userService.updateProfile(updateData)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response: AuthResponse) => {
+            this.sessionService.logIn(response.token);
+            this.loadUserProfile();
+            this.snackBar.open("Profil mis à jour avec succès", "Fermer", { duration: 2000 });
+          },
+          error: (error) => {
+            console.error("Erreur lors de la mise à jour du profil:", error);
+            this.snackBar.open("Impossible de mettre à jour le profil", "Fermer", { duration: 3000 });
+          }
+        });
     }
   }
 
   // Se désabonner d'un topic
   unsubscribe(topicId: number): void {
-    this.topicService.unsubscribeFromTopic(topicId).subscribe({
-      next: (topics: Topic[]) => {
-        this.subscriptions = topics;
-        this.loadSubscriptions();
-        this.snackBar.open("Vous avez été désabonné avec succès", "Fermer", { duration: 2000 });
-      },
-      error: (error) => {
-        console.error("Erreur lors du désabonnement:", error);
-        this.snackBar.open("Impossible de se désabonner", "Fermer", { duration: 3000 });
-      }
-    });
+    this.topicService.unsubscribeFromTopic(topicId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (topics: Topic[]) => {
+          this.subscriptions = topics;
+          this.loadSubscriptions();
+          this.snackBar.open("Vous avez été désabonné avec succès", "Fermer", { duration: 2000 });
+        },
+        error: (error) => {
+          console.error("Erreur lors du désabonnement:", error);
+          this.snackBar.open("Impossible de se désabonner", "Fermer", { duration: 3000 });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

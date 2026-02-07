@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { SessionService } from '../../../../services/session.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { SessionService } from '../../../../services/session.service';
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   onError: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -34,27 +36,36 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value).subscribe({
-        next: (response) => {
-          this.sessionService.logIn(response.token);
-          this.authService.me().subscribe({
-            next: (user) => {
-              this.sessionService.setUser(user);
-              this.router.navigate(['/posts']);
-            },
-            error: () => {
-              this.onError = true;
-            }
-          });
-        },
-        error: () => {
-          this.onError = true;
-        }
-      });
+      this.authService.register(this.registerForm.value)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (response) => {
+            this.sessionService.logIn(response.token);
+            this.authService.me()
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (user) => {
+                  this.sessionService.setUser(user);
+                  this.router.navigate(['/posts']);
+                },
+                error: () => {
+                  this.onError = true;
+                }
+              });
+          },
+          error: () => {
+            this.onError = true;
+          }
+        });
     }
   }
 
   goBack(): void {
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

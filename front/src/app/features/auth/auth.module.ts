@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AuthRoutingModule } from './auth-routing.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { AuthRoutingModule } from './auth-routing.module';
     RegisterComponent
   ],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     AuthRoutingModule,
     MatButtonModule,
@@ -23,4 +25,4 @@ import { AuthRoutingModule } from './auth-routing.module';
     MatInputModule,
   ],
 })
-export class AppModule {}
+export class AuthModule {}

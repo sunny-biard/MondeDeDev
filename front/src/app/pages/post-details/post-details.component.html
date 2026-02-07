@@ -24,6 +24,7 @@
             <div class="comments-list" *ngIf="comments.length > 0">
                 <div class="comment-card" *ngFor="let comment of comments">
                     <span class="comment-author">{{ comment.user.username }}</span>
+                    <span class="comment-date">{{ comment.createdAt | date: 'dd/MM/yyyy' }}</span>
                     <p class="comment-content">{{ comment.content }}</p>
                 </div>
             </div>

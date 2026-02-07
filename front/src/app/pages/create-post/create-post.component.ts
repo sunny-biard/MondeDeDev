@@ -5,6 +5,7 @@ import { PostService } from '../../services/post.service';
 import { TopicService } from '../../services/topic.service';
 import { Topic } from '../../interfaces/topic.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-create-post',
@@ -14,6 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class CreatePostComponent implements OnInit {
   postForm!: FormGroup;
   topics: Topic[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -39,34 +41,43 @@ export class CreatePostComponent implements OnInit {
 
   // Charger les topics disponibles
   private loadTopics(): void {
-    this.topicService.getAllTopics().subscribe({
-      next: (topics: Topic[]) => {
-        this.topics = topics;
-      },
-      error: (error) => {
-        console.error("Erreur lors du chargement des thèmes:", error);
-      }
-    });
+    this.topicService.getAllTopics()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (topics: Topic[]) => {
+          this.topics = topics;
+        },
+        error: (error) => {
+          console.error("Erreur lors du chargement des thèmes:", error);
+        }
+      });
   }
 
   // Soumettre le formulaire
   onSubmit(): void {
     if (this.postForm.valid) {
-      this.postService.createPost(this.postForm.value).subscribe({
-        next: (post) => {
-          this.snackBar.open("Article créé avec succès", "Fermer", { duration: 2000 });
-          this.router.navigate(['/posts', post.id]);
-        },
-        error: (error) => {
-          console.error("Erreur lors de la création de l'article:", error);
-          this.snackBar.open("Impossible de créer l'article", "Fermer", { duration: 3000 });
-        }
-      });
+      this.postService.createPost(this.postForm.value)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: (post) => {
+            this.snackBar.open("Article créé avec succès", "Fermer", { duration: 2000 });
+            this.router.navigate(['/posts', post.id]);
+          },
+          error: (error) => {
+            console.error("Erreur lors de la création de l'article:", error);
+            this.snackBar.open("Impossible de créer l'article", "Fermer", { duration: 3000 });
+          }
+        });
     }
   }
 
   // Retourner à la liste
   goBack(): void {
     this.router.navigate(['/posts']);
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
