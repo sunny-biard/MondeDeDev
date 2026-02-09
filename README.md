@@ -44,7 +44,7 @@ CREATE DATABASE mondededev;
 
 ### 3. Configuration du backend
 
-Modifier le fichier `back/src/main/resources/application.properties` avec vos identifiants MySQL (exemple pour une base de données nommée "mondededev" :
+Modifier le fichier `back/src/main/resources/application.properties` avec vos identifiants MySQL (exemple pour une base de données nommée "mondededev") :
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/mondededev?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
