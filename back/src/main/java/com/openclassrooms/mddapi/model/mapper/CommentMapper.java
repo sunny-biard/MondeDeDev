@@ -10,6 +10,9 @@ import com.openclassrooms.mddapi.model.entity.Post;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.CommentCreateRequest;
 
+/**
+ * Mapper pour la conversion entre entités Comment et DTOs.
+ */
 public class CommentMapper {
 
     @NonNull

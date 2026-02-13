@@ -10,6 +10,9 @@ import com.openclassrooms.mddapi.model.entity.Topic;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.PostCreateRequest;
 
+/**
+ * Mapper pour la conversion entre entités Post et DTOs.
+ */
 public class PostMapper {
 
     @NonNull

@@ -15,6 +15,13 @@ import jakarta.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * Entité représentant un commentaire sur un post.
+ * Relations :
+ * - ManyToOne avec {@link User} (auteur du commentaire)
+ * - ManyToOne avec {@link Post} (post commenté)
+ * Table de base de données : comments
+ */
 @Data
 @Entity
 @Table(name = "comments")

@@ -18,6 +18,13 @@ import com.openclassrooms.mddapi.service.UserService;
 
 import jakarta.validation.Valid;
 
+/**
+ * Contrôleur REST gérant les opérations sur les commentaires.
+ * Ce contrôleur expose les endpoints suivants :
+ * - {@code GET /api/comments?postId=X} - Récupération des commentaires d'un post
+ * - {@code POST /api/comments} - Création d'un nouveau commentaire
+ * Tous les endpoints nécessitent une authentification JWT.
+ */
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
@@ -28,6 +35,11 @@ public class CommentController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Récupère tous les commentaires d'un post spécifique.
+     * @param postId Identifiant du post
+     * @return {@link ResponseEntity} contenant la liste des commentaires
+     */
     @GetMapping
     public ResponseEntity<List<CommentDto>> getCommentsByPostId(@RequestParam Integer postId) {
         try {
@@ -38,6 +50,12 @@ public class CommentController {
         }
     }
 
+    /**
+     * Crée un nouveau commentaire sur un post.
+     * @param req Requête de création contenant le contenu et l'ID du post
+     * @return {@link ResponseEntity} contenant le commentaire créé (status 201)
+     * @throws RuntimeException Si l'utilisateur ou le post n'est pas trouvé
+     */
     @PostMapping
     public ResponseEntity<?> createComment(@Valid @RequestBody CommentCreateRequest req) {
         try {

@@ -16,6 +16,13 @@ import jakarta.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * Entité représentant un thème de discussion.
+ * Relations :
+ * - ManyToMany avec {@link User} (abonnés au thème)
+ * - OneToMany avec {@link Post} (posts du thème)
+ * Table de base de données : topics
+ */
 @Data
 @Entity
 @Table(name = "topics")

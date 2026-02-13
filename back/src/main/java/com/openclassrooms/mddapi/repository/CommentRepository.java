@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import com.openclassrooms.mddapi.model.entity.Comment;
 
+/**
+ * Repository pour l'accès aux données des commentaires.
+ */
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByPostId(Integer postId);

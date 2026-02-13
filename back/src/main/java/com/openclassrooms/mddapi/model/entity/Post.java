@@ -17,6 +17,14 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * Entité représentant un post (article) de l'application.
+ * Relations :
+ * - ManyToOne avec {@link Topic} (thème du post)
+ * - ManyToOne avec {@link User} (auteur du post)
+ * - OneToMany avec {@link Comment} (commentaires du post)
+ * Table de base de données : posts
+ */
 @Data
 @Entity
 @Table(name = "posts")

@@ -13,6 +13,17 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.mddapi.configuration.JwtProperties;
 
+/**
+ * Service de gestion des tokens JWT (JSON Web Tokens).
+ * Ce service fournit les fonctionnalités suivantes :
+ * - Génération de tokens JWT
+ * - Validation de tokens JWT
+ * - Extraction d'informations depuis les tokens
+ * Configuration :
+ * - Algorithme : HS256 (HMAC avec SHA-256)
+ * - Clé secrète : Chargée depuis application.properties
+ * - Durée de validité : Configurable (défaut: 1 heure)
+ */
 @Service
 public class JwtService {
 
@@ -21,14 +32,26 @@ public class JwtService {
     
     private Key key;
 
-    // Initialise la clé de signature à partir du secret configuré
+    /**
+     * Initialise la clé de signature JWT.
+     * Méthode exécutée après l'injection des dépendances.
+     * Crée une clé HMAC SHA-256 à partir du secret configuré.
+     */
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
         System.out.println("JWT loaded. Expiration: " + jwtProperties.getExpiration());
     }
 
-    // Génère un token JWT pour un utilisateur donné
+    /**
+     * Génère un nouveau token JWT pour un utilisateur.
+     * Le token contient :
+     * - Subject : Email de l'utilisateur
+     * - Date d'émission : Date actuelle
+     * - Date d'expiration : Date actuelle + durée de validité
+     * @param userDetails Détails de l'utilisateur
+     * @return Token JWT signé
+     */
     public String generateToken(org.springframework.security.core.userdetails.UserDetails userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername()) // Utilise l'email comme sujet
@@ -38,17 +61,34 @@ public class JwtService {
                 .compact();
     }
 
-    // Récupère le nom d'utilisateur depuis un token JWT
+    /**
+     * Extrait le nom d'utilisateur (email) depuis un token JWT.
+     * @param token Token JWT à décoder
+     * @return Email de l'utilisateur
+     * @throws JwtException Si le token est invalide ou expiré
+     */
     public String getUsernameByToken(String token) {
         return getAllClaimsByToken(token).getSubject();
     }
 
-    // Vérifie si le token est expiré
+    /**
+     * Vérifie si un token JWT est expiré.
+     * @param token Token JWT à vérifier
+     * @return true si le token est expiré, false sinon
+     */
     private boolean isTokenExpired(String token) {
         return getAllClaimsByToken(token).getExpiration().before(new Date());
     }
 
-    // Vérifie si le token est valide pour un utilisateur donné
+    /**
+     * Vérifie si un token JWT est valide pour un utilisateur donné.
+     * Un token est valide si :
+     * - Le nom d'utilisateur correspond
+     * - Le token n'est pas expiré
+     * @param token Token JWT à valider
+     * @param userDetails Détails de l'utilisateur
+     * @return true si le token est valide, false sinon
+     */
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             final String username = getUsernameByToken(token);
@@ -58,7 +98,12 @@ public class JwtService {
         }
     }
 
-    // Récupère toutes les réclamations (claims) depuis un token JWT
+    /**
+     * Récupère toutes les claims (données) depuis un token JWT.
+     * @param token Token JWT à décoder
+     * @return Claims du token
+     * @throws JwtException Si le token est invalide
+     */
     private Claims getAllClaimsByToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

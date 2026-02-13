@@ -24,6 +24,16 @@ import jakarta.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * Entité représentant un utilisateur de l'application.
+ * Implémente {@link UserDetails} pour l'intégration avec
+ * Spring Security.
+ * Relations :
+ * - ManyToMany avec {@link Topic} (abonnements)
+ * - OneToMany avec {@link Post} (posts créés)
+ * - OneToMany avec {@link Comment} (commentaires créés)
+ * Table de base de données : users
+ */
 @Data
 @Entity
 @Table(name = "users")

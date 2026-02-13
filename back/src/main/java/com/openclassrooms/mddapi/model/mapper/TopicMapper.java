@@ -5,6 +5,9 @@ import org.springframework.lang.NonNull;
 import com.openclassrooms.mddapi.model.dto.TopicDto;
 import com.openclassrooms.mddapi.model.entity.Topic;
 
+/**
+ * Mapper pour la conversion entre entités Topic et DTOs.
+ */
 public class TopicMapper {
 
     @NonNull

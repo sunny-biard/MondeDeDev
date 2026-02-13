@@ -15,6 +15,16 @@ import com.openclassrooms.mddapi.model.mapper.TopicMapper;
 import com.openclassrooms.mddapi.service.TopicService;
 import com.openclassrooms.mddapi.service.UserService;
 
+/**
+ * Contrôleur REST gérant les opérations sur les thèmes (topics).
+ * Ce contrôleur expose les endpoints suivants :
+ * - {@code GET /api/topics} - Récupération de tous les thèmes
+ * - {@code GET /api/topics/:id} - Récupération d'un thème spécifique
+ * - {@code POST /api/topics/:id/subscribe} - Abonnement à un thème
+ * - {@code DELETE /api/topics/:id/subscribe} - Désabonnement d'un thème
+ * - {@code GET /api/topics/subscriptions} - Récupération des abonnements
+ * Tous les endpoints nécessitent une authentification JWT.
+ */
 @RestController
 @RequestMapping("/api/topics")
 public class TopicController {
@@ -25,12 +35,22 @@ public class TopicController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Récupère tous les thèmes disponibles.
+     * @return {@link ResponseEntity} contenant la liste de tous les thèmes
+     */
     @GetMapping
     public ResponseEntity<List<TopicDto>> getAllTopics() {
         List<TopicDto> topics = topicService.getAllTopics();
         return ResponseEntity.ok(topics);
     }
 
+    /**
+     * Récupère un thème spécifique par son ID.
+     * @param id Identifiant du thème
+     * @return {@link ResponseEntity} contenant le thème
+     * @throws RuntimeException Si le thème n'est pas trouvé
+     */
     @GetMapping("/{id}")
     public ResponseEntity<TopicDto> getTopicById(@PathVariable Integer id) {
         try {
@@ -41,6 +61,12 @@ public class TopicController {
         }
     }
 
+    /**
+     * Permet à l'utilisateur de s'abonner à un thème.
+     * @param id Identifiant du thème
+     * @return {@link ResponseEntity} contenant la liste mise à jour des abonnements
+     * @throws RuntimeException Si l'utilisateur/thème n'existe pas ou déjà abonné
+     */
     @PostMapping("/{id}/subscribe")
     public ResponseEntity<?> subscribeToTopic(@PathVariable Integer id) {
         try {
@@ -65,6 +91,12 @@ public class TopicController {
         }
     }
 
+    /**
+     * Permet à l'utilisateur de se désabonner d'un thème.
+     * @param id Identifiant du thème
+     * @return {@link ResponseEntity} contenant la liste mise à jour des abonnements
+     * @throws RuntimeException Si l'utilisateur/thème n'existe pas ou pas abonné
+     */
     @DeleteMapping("/{id}/subscribe")
     public ResponseEntity<?> unsubscribeFromTopic(@PathVariable Integer id) {
         try {
@@ -89,6 +121,11 @@ public class TopicController {
         }
     }
 
+    /**
+     * Récupère tous les thèmes auxquels l'utilisateur est abonné.
+     * @return {@link ResponseEntity} contenant la liste des abonnements
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé
+     */
     @GetMapping("/subscriptions")
     public ResponseEntity<List<TopicDto>> getUserSubscriptions() {
         try {

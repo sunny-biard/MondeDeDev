@@ -18,6 +18,15 @@ import com.openclassrooms.mddapi.service.UserService;
 
 import jakarta.validation.Valid;
 
+/**
+ * Contrôleur REST gérant les opérations sur les posts (articles).
+ * Ce contrôleur expose les endpoints suivants :
+ * - {@code GET /api/posts} - Récupération du fil d'actualité personnalisé
+ * - {@code GET /api/posts/:id} - Récupération d'un post spécifique
+ * - {@code GET /api/posts/topic/:topicId} - Récupération des posts d'un thème
+ * - {@code POST /api/posts} - Création d'un nouveau post
+ * Tous les endpoints nécessitent une authentification JWT.
+ */
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -28,6 +37,17 @@ public class PostController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Récupère le fil d'actualité personnalisé de l'utilisateur.
+     * Retourne tous les posts des thèmes auxquels l'utilisateur
+     * est abonné, triés par date de création.
+     * Paramètres de tri disponibles :
+     * - {@code sort=desc} - Du plus récent au plus ancien (défaut)
+     * - {@code sort=asc} - Du plus ancien au plus récent
+     * @param sort Ordre de tri (asc ou desc), défaut: desc
+     * @return {@link ResponseEntity} contenant la liste des posts
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé
+     */
     @GetMapping
     public ResponseEntity<List<PostDto>> getAllPosts(
             @RequestParam(required = false, defaultValue = "desc") String sort) {
@@ -46,6 +66,12 @@ public class PostController {
         }
     }
 
+    /**
+     * Récupère un post spécifique par son ID.
+     * @param id Identifiant du post
+     * @return {@link ResponseEntity} contenant le post
+     * @throws RuntimeException Si le post n'est pas trouvé
+     */
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer id) {
         try {
@@ -56,6 +82,12 @@ public class PostController {
         }
     }
 
+    /**
+     * Récupère tous les posts d'un thème spécifique.
+     * @param topicId Identifiant du thème
+     * @return {@link ResponseEntity} contenant la liste des posts du thème
+     * @throws RuntimeException Si le thème n'est pas trouvé
+     */
     @GetMapping("/topic/{topicId}")
     public ResponseEntity<List<PostDto>> getPostsByTopic(@PathVariable Integer topicId) {
         try {
@@ -66,6 +98,12 @@ public class PostController {
         }
     }
 
+    /**
+     * Crée un nouveau post.
+     * @param req Requête de création contenant titre, contenu et thème
+     * @return {@link ResponseEntity} contenant le post créé (status 201)
+     * @throws RuntimeException Si l'utilisateur ou le thème n'est pas trouvé
+     */
     @PostMapping
     public ResponseEntity<?> createPost(@Valid @RequestBody PostCreateRequest req) {
         try {

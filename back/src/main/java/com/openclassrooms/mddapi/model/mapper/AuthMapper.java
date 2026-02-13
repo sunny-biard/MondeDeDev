@@ -2,6 +2,9 @@ package com.openclassrooms.mddapi.model.mapper;
 
 import com.openclassrooms.mddapi.model.response.AuthResponse;
 
+/**
+ * Mapper pour créer des réponses d'authentification.
+ */
 public class AuthMapper {
     
     public static AuthResponse toResponse(String token) {

@@ -9,6 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import com.openclassrooms.mddapi.model.entity.Post;
 
+/**
+ * Repository pour l'accès aux données des posts.
+ * Fournit des méthodes personnalisées pour récupérer
+ * le fil d'actualité personnalisé des utilisateurs.
+ */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
 

@@ -11,6 +11,13 @@ import com.openclassrooms.mddapi.model.dto.UserProfileDto;
 import com.openclassrooms.mddapi.model.entity.User;
 import com.openclassrooms.mddapi.model.request.RegisterRequest;
 
+/**
+ * Mapper pour la conversion entre entités User et DTOs.
+ * Fournit des méthodes statiques pour :
+ * - Créer une entité depuis une requête d'inscription
+ * - Convertir une entité en DTO simple
+ * - Convertir une entité en DTO avec abonnements
+ */
 public class UserMapper {
 
     @NonNull

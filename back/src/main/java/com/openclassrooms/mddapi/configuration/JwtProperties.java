@@ -5,6 +5,14 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
+/**
+ * Classe de configuration pour les propriétés JWT.
+ * Cette classe charge les propriétés JWT depuis le fichier
+ * {@code application.properties} avec le préfixe {@code jwt}.
+ * Propriétés disponibles :
+ *   {@code jwt.secret} - Clé secrète pour signer les tokens JWT
+ *   {@code jwt.expiration} - Durée de validité des tokens en millisecondes
+ */
 @Data
 @Component
 @ConfigurationProperties(prefix = "jwt")

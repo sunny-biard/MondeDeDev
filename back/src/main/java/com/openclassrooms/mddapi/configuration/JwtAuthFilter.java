@@ -19,6 +19,19 @@ import com.openclassrooms.mddapi.service.UserService;
 
 import java.io.IOException;
 
+/**
+ * Filtre d'authentification JWT.
+ * Ce filtre intercepte chaque requête HTTP pour :
+ *   Extraire le token JWT du header Authorization
+ *   Valider le token
+ *   Charger les détails de l'utilisateur
+ *   Définir l'authentification dans le contexte de sécurité
+ * Format attendu du header : {@code Authorization: Bearer <token>}
+ * Comportement :
+ *   Si le token est valide : l'utilisateur est authentifié
+ *   Si le token est invalide ou expiré : erreur 401 (sauf pour /api/auth/*)
+ *   Si aucun token : la requête continue (gérée par Spring Security)
+ */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -28,7 +41,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
-    // Filtre chaque requête pour valider le token JWT
+    /**
+     * Filtre chaque requête pour valider le token JWT.
+     * @param request Requête HTTP entrante
+     * @param response Réponse HTTP
+     * @param chain Chaîne de filtres
+     * @throws ServletException Si une erreur servlet survient
+     * @throws IOException Si une erreur I/O survient
+     */
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

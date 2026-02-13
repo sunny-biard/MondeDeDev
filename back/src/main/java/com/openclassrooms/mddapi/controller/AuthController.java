@@ -22,6 +22,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Contrôleur REST gérant l'authentification et l'autorisation.
+ * Ce contrôleur expose les endpoints suivants :
+ *   {@code POST /api/auth/login} - Connexion utilisateur
+ *   {@code POST /api/auth/register} - Inscription utilisateur
+ *   {@code GET /api/auth/me} - Récupération du profil utilisateur
+ *   {@code PUT /api/auth/me} - Mise à jour du profil utilisateur
+ * Endpoints publics : login, register
+ * Endpoints protégés : me (GET et PUT) nécessitent une authentification JWT
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -38,6 +48,14 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Authentifie un utilisateur et génère un token JWT.
+     * Cet endpoint permet à un utilisateur de se connecter avec son
+     * email ou nom d'utilisateur et son mot de passe.
+     * @param req Requête de connexion contenant l'identifiant et le mot de passe
+     * @return {@link AuthResponse} contenant le token JWT
+     * @throws RuntimeException Si les identifiants sont invalides
+     */
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginRequest req) {
         // Authentification de l'utilisateur
@@ -52,6 +70,16 @@ public class AuthController {
         return AuthMapper.toResponse(token);
     }
 
+    /**
+     * Inscrit un nouvel utilisateur et génère un token JWT.
+     * Crée un nouveau compte utilisateur avec validation des données :
+     *   Email unique
+     *   Nom d'utilisateur unique
+     *   Mot de passe encodé avec BCrypt
+     * @param req Requête d'inscription contenant les informations utilisateur
+     * @return {@link AuthResponse} contenant le token JWT
+     * @throws RuntimeException Si l'email ou le nom d'utilisateur existe déjà
+     */
     @PostMapping("/register")
     public AuthResponse register(@Valid @RequestBody RegisterRequest req) {
         // Vérifie si l'utilisateur existe déjà
@@ -78,7 +106,12 @@ public class AuthController {
         return AuthMapper.toResponse(token);
     }
 
-    // Récupère le profil de l'utilisateur connecté
+    /**
+     * Récupère le profil de l'utilisateur connecté.
+     * Nécessite une authentification JWT valide.
+     * @return {@link ResponseEntity} contenant le profil utilisateur avec abonnements
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé
+     */
     @GetMapping("/me")
     public ResponseEntity<?> me() {
         try {
@@ -94,7 +127,17 @@ public class AuthController {
         }
     }
 
-    // Met à jour le profil de l'utilisateur connecté
+    /**
+     * Met à jour le profil de l'utilisateur connecté.
+     * Permet de modifier :
+     * - Nom d'utilisateur (si non pris)
+     * - Email (si non pris)
+     * - Mot de passe (encodé automatiquement)
+     * Génère un nouveau token JWT après mise à jour.
+     * @param req Requête de mise à jour contenant les nouvelles informations
+     * @return {@link AuthResponse} contenant le nouveau token JWT
+     * @throws RuntimeException Si l'utilisateur n'est pas trouvé ou erreur de validation
+     */
     @PutMapping("/me")
     public AuthResponse updateProfile(@RequestBody UserUpdateRequest req) {
         try {
